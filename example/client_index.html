@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Youverse Document Scan</title>
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+  <script src="../js/dist/youverse-document-scan.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <youverse-document-scan id="youverse" cancel-verification="true" change-camera="true" locale="en"></youverse-document-scan>
+  <div id="divv" class="hidden" style="text-align: center;">
+    <img id="myImg" src="" style="max-width: 500px; width: 100%;" /><br>
+    <button onclick="retry()">Retry Capture</button>
+  </div>
+</body>
+
+<script>
+  const EVENT_TYPES = {
+    NEXT_STEP: "YV_DOCUMENT_NEXT_STEP",
+    RESPONSE_NEXT_STEP: "YV_DOCUMENT_RESPONSE_NEXT_STEP",
+    CANCEL: "YV_DOCUMENT_CANCEL",
+    RESPONSE_CANCEL: "YV_DOCUMENT_RESPONSE_CANCEL",
+  };
+
+  function createResponseEvent(responseMessage, eventType) {
+    return new CustomEvent(eventType, {
+      detail: responseMessage,
+    });
+  }
+
+  document.addEventListener(EVENT_TYPES.NEXT_STEP, function (event) {
+    const { image } = event.detail;
+
+    const img = document.getElementById("myImg");
+    img.src = image;
+
+    const app = document.getElementById("youverse");
+    app.remove();
+
+    const div = document.getElementById("divv");
+    div.classList.toggle('hidden');
+    //Interact with a web component
+    setTimeout(() => {
+      document.dispatchEvent(
+        new CustomEvent(EVENT_TYPES.RESPONSE_NEXT_STEP)
+      );
+    }, 5000);
+
+  });
+
+  document.addEventListener(EVENT_TYPES.CANCEL, function (event) {
+    console.log("Canceled");
+
+    //Interact with a web component
+    document.dispatchEvent(
+      new CustomEvent(EVENT_TYPES.RESPONSE_CANCEL)
+    );
+  });
+
+  function retry() {
+    const div = document.getElementById("divv");
+    div.classList.toggle('hidden');
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      '<youverse-document-scan id="youverse" cancel-verification="true" change-camera="true" locale="en"></youverse-document-scan>'
+    );
+  }
+</script>
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+
+</html>
