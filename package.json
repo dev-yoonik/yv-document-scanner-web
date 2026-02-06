@@ -1,6 +1,6 @@
 {
   "name": "yv-document-scanner-web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This web component is designed to scan and capture documents with detection capabilities.",
   "main": "./js/dist/youverse-document-scan.min.js",
   "types": "./js/ts/youverse-document-scan.d.ts",

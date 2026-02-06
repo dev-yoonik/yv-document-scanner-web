@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Youverse Document Scan</title>
-  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
   <script src="../js/dist/youverse-document-scan.min.js"></script>
 
   <style>
@@ -16,11 +15,7 @@
 </head>
 
 <body>
-  <youverse-document-scan id="youverse" cancel-verification="true" change-camera="true" locale="en"></youverse-document-scan>
-  <div id="divv" class="hidden" style="text-align: center;">
-    <img id="myImg" src="" style="max-width: 500px; width: 100%;" /><br>
-    <button onclick="retry()">Retry Capture</button>
-  </div>
+  <youverse-document-scan id="youverse" locale="en" license="Your.Jwt.License"></youverse-document-scan>
 </body>
 
 <script>
@@ -40,14 +35,6 @@
   document.addEventListener(EVENT_TYPES.NEXT_STEP, function (event) {
     const { image } = event.detail;
 
-    const img = document.getElementById("myImg");
-    img.src = image;
-
-    const app = document.getElementById("youverse");
-    app.remove();
-
-    const div = document.getElementById("divv");
-    div.classList.toggle('hidden');
     //Interact with a web component
     setTimeout(() => {
       document.dispatchEvent(
@@ -65,21 +52,6 @@
       new CustomEvent(EVENT_TYPES.RESPONSE_CANCEL)
     );
   });
-
-  function retry() {
-    const div = document.getElementById("divv");
-    div.classList.toggle('hidden');
-    document.body.insertAdjacentHTML(
-      'beforeend',
-      '<youverse-document-scan id="youverse" cancel-verification="true" change-camera="true" locale="en"></youverse-document-scan>'
-    );
-  }
 </script>
-
-<style>
-  .hidden {
-    display: none;
-  }
-</style>
 
 </html>
